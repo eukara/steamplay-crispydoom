@@ -1,0 +1,7 @@
+"manifest"
+{
+	"commandline"			"/wrapper run"
+	"commandline_waitforexitandrun"	"/wrapper wait-before-run"
+	"commandline_getnativepath"	"/wrapper get-native-path"
+	"commandline_getcompatpath"	"/wrapper get-compat-path"
+}

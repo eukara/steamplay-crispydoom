@@ -1,0 +1,109 @@
+#!/bin/sh
+
+# there's run & wait-before-run, we only care about the latter.
+COMMANDTYPE=$1
+
+# this is how Steam tries to run the game
+if [ "$COMMANDTYPE" == "wait-before-run" ]; then
+
+	# used to decipher which game we'll play
+	GAMEBINARY=$(basename "$2")
+	# steam game dir
+	GAMEDIR=$(dirname "$2")
+
+	# we have an unknown amount of parameters, let's make sure we get them
+	PARMARR=( "$@" )
+	ARGLEN=${#PARMARR[@]}
+
+	# get every parameter after the second (game location) and put it into
+	# its own variable to pass over later
+	GAMEARGS=${PARMARR[@]:2:$ARGLEN-1}
+
+	if [[ "$GAMEDIR" == *"Ultimate Doom"* ]]; then
+		crispy-doom -iwad "$GAMEDIR/../base/DOOM.WAD"
+	elif [[ "$GAMEDIR" == *"Doom 2"* ]]; then
+		crispy-doom -iwad "$GAMEDIR/../base/DOOM2.WAD"
+	elif [[ "$GAMEDIR" == *"Final Doom"* ]]; then
+		if [[ "$GAMEARGS" == *"plutonia"* ]]; then
+			crispy-doom -iwad "$GAMEDIR/../base/PLUTONIA.WAD"
+		elif [[ "$GAMEARGS" == *"tnt"* ]]; then
+			crispy-doom -iwad "$GAMEDIR/../base/TNT.WAD"
+		fi
+	elif [[ "$GAMEDIR" == *"Master Levels"* ]]; then
+		xmessage -bg black -fg white -buttons ATTACK,BLACKTWR,BLOODSEA,CANYON,CATWALK,COMBINE,FISTULA,GARRISON,GERYON,MANOR,MEPHISTO,MINOS,NESSUS,PARADOX,SUBSPACE,SUBTERRA,TEETH,TTRAP,VESPERAS,VIRGIL "Select a PWAD from the Master Levels for Doom II."
+
+		SELECTION="$?"
+
+		if [ "$SELECTION" == "101" ]; then
+			PWAD="ATTACK.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "102" ]; then
+			PWAD="BLACKWTR.WAD"
+			WARP="25"
+		elif [ "$SELECTION" == "103" ]; then
+			PWAD="BLOODSEA.WAD"
+			WARP="07"
+		elif [ "$SELECTION" == "104" ]; then
+			PWAD="CANYON.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "105" ]; then
+			PWAD="CATWALK.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "106" ]; then
+			PWAD="COMBINE.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "107" ]; then
+			PWAD="FISTULA.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "108" ]; then
+			PWAD="GARRISON.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "109" ]; then
+			PWAD="GERYON.WAD"
+			WARP="08"
+		elif [ "$SELECTION" == "110" ]; then
+			PWAD="MANOR.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "111" ]; then
+			PWAD="MEPHISTO.WAD"
+			WARP="07"
+		elif [ "$SELECTION" == "112" ]; then
+			PWAD="MINOS.WAD"
+			WARP="05"
+		elif [ "$SELECTION" == "113" ]; then
+			PWAD="NESSUS.WAD"
+			WARP="07"
+		elif [ "$SELECTION" == "114" ]; then
+			PWAD="PARADOX.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "115" ]; then
+			PWAD="SUBSPACE.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "116" ]; then
+			PWAD="SUBTERRA.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "117" ]; then
+			PWAD="TEETH.WAD"
+			WARP="31"
+		elif [ "$SELECTION" == "118" ]; then
+			PWAD="TTRAP.WAD"
+			WARP="01"
+		elif [ "$SELECTION" == "119" ]; then
+			PWAD="VESPERAS.WAD"
+			WARP="09"
+		elif [ "$SELECTION" == "120" ]; then
+			PWAD="VIRGIL.WAD"
+			WARP="03"
+		fi
+
+		if [ "$SELECTION" != "1" ]; then
+			crispy-doom -iwad "$GAMEDIR/doom2/DOOM2.WAD" -file "$GAMEDIR/master/wads/$PWAD" -warp $WARP
+		fi
+	elif [[ "$GAMEDIR" == *"Heretic"* ]]; then
+		crispy-heretic -iwad "$GAMEDIR/../base/HERETIC.WAD"
+	elif [[ "$GAMEDIR" == *"Hexen Deathkings of the Dark Citadel"* ]];then
+		crispy-hexen -iwad "$GAMEDIR/../base/HEXEN.WAD" -file "$GAMEDIR/../base/HEXDD.WAD"
+	elif [[ "$GAMEDIR" == *"Hexen"* ]]; then
+		crispy-hexen -iwad "$GAMEDIR/../base/HEXEN.WAD"
+	fi
+fi
